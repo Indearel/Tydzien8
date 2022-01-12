@@ -1,17 +1,50 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM, { render } from "react-dom";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import "./styles.css";
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+const Button = React.forwardRef (function(
+  { backgroundColor, children, onClick },
+  ref
+  ) {
+  return  ( 
+    <button ref={ref} onClick={onClick} style={{ backgroundColor }}>
+    {children}
+    </button>
+  );
+});
+
+const IndigoButton = React.forwardRef (({children, onClick }, ref) =>
+  <Button backgroundColor = "indigo" onClick={onClick} ref={ref}>
+    {children}
+  </Button>
+)
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.firstref = React.createRef();
+    this.secondref = React.createRef();
+  }
+  render() {
+    return (
+      <div className="App">
+        <IndigoButton 
+        onClick={() => this.secondref.current.focus()} 
+        ref={this.firstref} 
+        >
+          <h1>Firstu</h1>
+        </IndigoButton>
+        <Button 
+        onClick={() => this.firstref.current.focus()} 
+        ref={this.secondref} 
+        backgroundColor = "blue" 
+        >
+          <h1>Secondu</h1>
+        </Button>
+      </div>
+    );
+  }
+}
+
+const rootElement = document.getElementById("root");
+ReactDOM.render(<App />, rootElement);
